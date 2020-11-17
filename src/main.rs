@@ -143,6 +143,26 @@ fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> V
 }
 
 fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Vec<T>) -> Vec<T> {
+    let mut x = 0;
+    let mut y = 0;
+    let mut output = Vec::<T>::new();
+
+    while x < xs.len() && y < ys.len(){
+        if xs[x] < ys[y]{
+            output.push(xs[x]);
+            x+=1;
+        }
+        else{
+            output.push(ys[y]);
+            y+=1;
+        }
+    }
+    if x < xs.len(){
+        output.extend(&xs[x..xs.len()]);
+    }
+    if y < ys.len(){
+        output.extend(&ys[y..ys.len()]);
+    }
     // This takes two sorted vectors, like:
     //    <5, 8, 9> and
     //    <0, 2, 3, 6>
@@ -158,7 +178,7 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
 
     // This is totally wrong and will not sort. You should replace it
     // with something useful. :)
-    return xs;
+    return output;
 }
 
 fn is_sorted<T: PartialOrd>(slice: &[T]) -> bool {
