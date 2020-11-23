@@ -2,7 +2,7 @@ use rand::{thread_rng, Rng};
 use std::time::{Instant};
 
 fn main() {
-    let size = 500; // 100000;
+    let size = 750000; // 100000;
     let v = generate_random_array(size, 0, size);
 
     let mut u = v.clone();
@@ -93,29 +93,20 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     if length < 2 {
         return;
     }
-    let x = 0;
-    let y = length-1;
-    let mut pivot = 0;
 
-    for mut i in x..y {
-        if v[i] < v[pivot]{
-            v.swap(pivot,i);
-            pivot = i;
-            i += 1;
+    //let pivot = v.clone()[length-1];
+    let mut low = 0;
+    let high = length-1;
+
+    for i in 0..high{
+        if v[i] < v[high]{
+            low += 1;
+            v.swap(i, low-1);
         }
     }
-    if v[y] < v[pivot]{
-        v.swap(pivot, y);
-        pivot = y;
-    }
 
-
-
-
-    // Now choose a pivot and do the organizing.
-    
-    // ...
-    let smaller = pivot;
+    let smaller = low;
+    v.swap(smaller, high);
 
     // Sort all the items < pivot
     quicksort(&mut v[0..smaller]);
