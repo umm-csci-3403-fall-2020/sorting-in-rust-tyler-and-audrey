@@ -2,7 +2,7 @@ use rand::{thread_rng, Rng};
 use std::time::{Instant};
 
 fn main() {
-    let size = 750000; // 100000;
+    let size = 100000;
     let v = generate_random_array(size, 0, size);
 
     let mut u = v.clone();
@@ -36,33 +36,16 @@ fn main() {
 // don't do that here, but you could add some print statements if,
 // for example, you want to watch the bubbling happen.
 fn insertion_sort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
-    // Goal: (All x, y | 0 ≤ x < y < length : v[x] ≤ v[y])
+    
     for i in 0..v.len() {
-        // Invariant: (All x, y | 0 ≤ x < y < i : v[x] ≤ v[y])
-        // I.e., we assume everything < i is already sorted
-        // by previous passes. Now we want to get everything
-        // ≤ i to be sorted. This requires "bubbling" v[i]
-        // to the left until it "finds its spot", i.e., until
-        // swapping it one more time would make it _larger_
-        // than the value to its right.
-        //
-        // j is where we are in the bubbling process, so we
-        // start with j=i.
+        
         let mut j = i;
-        // If j > 0 we might still need to move left, so continue. 
-        // But _only_ continue if v[j] _should_ move left, i.e.,
-        // if it's less than the value to its left (so those two
-        // are out of order.)
+
         while j > 0 && v[j-1] > v[j] {
-            // Since j-1 and j are out of order swap them, and move
-            // j one to the left to continue the bubbling if necessary.
             v.swap(j-1, j);
             j = j - 1;
         }
     }
-    // And we're done! The outer for loop is done O(N) times, and
-    // the inner while loop is (on average) O(N), so insertion sort
-    // is O(N^2).
 }
 
 // Quicksort sort is also "in place", so we modify the input array v
@@ -73,28 +56,13 @@ fn insertion_sort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
 // don't do that here, but you could add some print statements if,
 // for example, you want to watch the sorting happen.
 fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
-    // Quicksort is a recursive solution where we select a pivot
-    // value (usually just the first element) and split (in place)
-    // the array into two sections: The "front" is all < the pivot,
-    // and the "back" is all ≥ pivot. More formally, there's an
-    // index smaller where:
-    //   (All i | 0 ≤ i < smaller : v[i] < pivot) /\
-    //   (All i | smaller ≤ i < length : v[i] ≥ pivot)
-    // Now you can recursively call quicksort on the front using
-    // the slice v[0..smaller] to sort that part, and call it
-    // recursively on the slice v[smaller+1..length] to sort 
-    // the back half. (You need the +1 to ensure that both slices
-    // are smaller than the original array; without it you can
-    // end up with infinite recursion.)
 
     let length = v.len();
-    // If the array has 0 or 1 elements it's already sorted
-    // and we'll just stop.
+   
     if length < 2 {
         return;
     }
 
-    //let pivot = v.clone()[length-1];
     let mut low = 0;
     let high = length-1;
 
@@ -108,11 +76,7 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
     let smaller = low;
     v.swap(smaller, high);
 
-    // Sort all the items < pivot
     quicksort(&mut v[0..smaller]);
-    // Sort all the items ≥ pivot, *not* including the
-    // pivot value itself. If we don't include the +1
-    // here you can end up in infinite recursions.
     quicksort(&mut v[smaller+1..length]);
 }
 
@@ -128,11 +92,6 @@ fn quicksort<T: PartialOrd + std::fmt::Debug>(v: &mut [T]) {
 // to sort things like numbers, but sorting "large" things (e.g., student records)
 // would involve copying them, and that's likely to be expensive and perhaps undesirable.
 fn merge_sort<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(v: &[T]) -> Vec<T> {
-    // Mergesort is a recursive solution where we split the
-    // array in half (slices make this easy), sort each half,
-    // and then merge the results together. All the "interesting"
-    // work is in the merge here, where in quicksort the "interesting"
-    // work is in organizing around the pivot.
 
     let len = v.len();
     if len == 0 {
@@ -171,21 +130,7 @@ fn merge<T: PartialOrd + std::marker::Copy + std::fmt::Debug>(xs: Vec<T>, ys: Ve
     if y < ys.len(){
         output.extend(&ys[y..ys.len()]);
     }
-    // This takes two sorted vectors, like:
-    //    <5, 8, 9> and
-    //    <0, 2, 3, 6>
-    // and merges them into a single sorted vector like:
-    //    <0, 2, 3, 5, 6, 8, 9>
-    // You should be able to do this in linear time by having
-    // two indices that point to where you are in xs and ys.
-    // You then compare those values, push the smaller one onto
-    // the result vector, and increment the appropriate index.
-    // You stop when one of your indices hits the end of its
-    // vector, and then push all the remaining elements from the
-    // other vector onto the result.
-
-    // This is totally wrong and will not sort. You should replace it
-    // with something useful. :)
+    
     return output;
 }
 
